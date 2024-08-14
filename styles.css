@@ -1,0 +1,37 @@
+
+body {
+  div.board {
+    margin: auto;
+    height: fit-content;
+    width: fit-content;
+    padding: 4px;
+    background-color: blue;
+    display: inline-block;
+
+    div.board-row {
+      margin: 0px;
+      padding: 0px;
+      height: fit-content;
+      width: fit-content;
+      display: flex;
+    }
+
+    div.slot {
+      height: 80px;
+      width: 80px;
+      margin: 5px;
+      padding: 0px;
+      background-color: white;
+      background-size: contain;
+      display: inline-block;
+    }
+    
+    div.slot-empty {
+      background-color: gray;
+    }
+  
+    div.slot-2048 {
+      background-image: url("radesh.jpg");
+    }
+  }
+}
