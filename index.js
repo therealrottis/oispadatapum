@@ -47,22 +47,48 @@ const executeAction = (inputDir) => {
     return document.getElementById(slotId(x, y));
   }
   
+  // imagine row is x && col is y
   for (let col = 0; col < boardSize; col++) {
-    for (let forRow = 0; forRow < boardSize; forRow++) {
-      let row = forRow;
+    for (let originalX = 0; originalX < boardSize; originalX++) {
+      let row = originalX;
+      const canMergeWith = [true, true, true, true]
+
+      let moveTo = originalX;
       while (row > 0) {
         if (isEmpty(at(row - 1, col))) {
           at(row-1, col).className = at(row, col).className;
           resetSlot(at(row, col));
-        } else if (getSlotValue(at(row - 1, col)) === getSlotValue(at(row, col))) {
+
+          moveTo = row - 1;
+        } else if (getSlotValue(at(row - 1, col)) === getSlotValue(at(row, col)) && canMergeWith[row-1]) {
           at(row-1, col).className = numToSlotClass(getSlotValue(at(row, col)) * 2);
           resetSlot(at(row, col));
+          canMergeWith[row] = false;
+
+          moveTo = row - 1;
           row = 0; // stop moving, we merged
         } else {
           row = 0; // stop moving, can't move anymore
         }
-        row--; 
+        row--;
       }
+      if (originalX != moveTo) {
+        playMoveAnimation( at(moveTo, col), at(originalX, col).id.split(";"));
+      }
+    }
+  }
+
+  const rand_value = (Math.random() > 0.75) ? 4 : 2
+
+  // code returns on success
+  while (true) {
+    const rand_x = Math.floor(Math.random() * 4)
+    const rand_y = Math.floor(Math.random() * 4)
+    const slot = at(rand_x, rand_y)
+    if (isEmpty(slot)) {
+      slot.className = numToSlotClass(rand_value)
+      playPopAnimation(slot);
+      return;
     }
   }
 }
@@ -118,6 +144,37 @@ const getSlotValue = (slot) => {
 
 const numToSlotClass = (number) => {
   return "slot slot-" + number  
+}
+
+const playPopAnimation = (slot) => {
+  slot.animate(
+    [
+      // keyframes
+      { transform: "scale(0)" },
+      { transform: "scale(1.15)" },
+      { transform: "scale(1)" }
+    ],
+    {
+      // timing options
+      duration: 200,
+      iterations: 1,
+    },
+  );
+}
+
+const playMoveAnimation = (slot, delta) => {
+  slot.animate(
+    [
+      // keyframes
+      { offset: 0 },
+      { offset: 0 }
+    ],
+    {
+      // timing options
+      duration: 300,
+      iterations: 1,
+    },
+  );
 }
 
 addEventListener("keydown", keyPressed);
