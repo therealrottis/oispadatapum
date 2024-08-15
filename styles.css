@@ -25,9 +25,9 @@ body {
       background-size: contain;
       display: inline-block;
     }
-    
+
     div.slot-empty {
-      background-color: gray;
+      background: none;
     }
   
     div.slot-2 {

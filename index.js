@@ -1,4 +1,6 @@
 const boardSize = 4;
+const slotSize = 80;
+const marginSize = 10;
 
 const keyPressed = (event) => {
   let inputDir;
@@ -58,13 +60,14 @@ const executeAction = (inputDir) => {
       while (row > 0) {
         if (isEmpty(at(row - 1, col))) {
           at(row-1, col).className = at(row, col).className;
-          resetSlot(at(row, col));
+          setSlotEmpty(at(row, col));
 
           moveTo = row - 1;
         } else if (getSlotValue(at(row - 1, col)) === getSlotValue(at(row, col)) && canMergeWith[row-1]) {
           at(row-1, col).className = numToSlotClass(getSlotValue(at(row, col)) * 2);
           incrementScore(getSlotValue(at(row - 1, col)));
-          resetSlot(at(row, col));
+          
+          setSlotEmpty(at(row, col))
           canMergeWith[row] = false;
 
           moveTo = row - 1;
@@ -75,7 +78,7 @@ const executeAction = (inputDir) => {
         row--;
       }
       if (originalX != moveTo) {
-        playMoveAnimation( at(moveTo, col), at(originalX, col).id.split(";"));
+        playMoveAnimation( at(moveTo, col), transpose ? "Y" : "X", (flip ? -1 : 1) *(originalX - moveTo));
         moved = true;
       }
     }
@@ -123,13 +126,9 @@ const resetBoard = () => {
   for (x = 0; x < boardSize; x++) {
     for (y = 0; y < boardSize; y++) {
       const curSlot = document.getElementById(slotId(x, y));
-      resetSlot(curSlot);
+      setSlotEmpty(curSlot);
     }
   }
-}
-
-const resetSlot = (slot) => {
-  slot.className = "slot slot-empty";
 }
 
 // execute once!
@@ -142,19 +141,32 @@ const buildBoard = () => {
     board.appendChild(row);
     row.className = "board-row"
     for (y = 0; y < boardSize; y++) {
-      const slot = document.createElement("div");
+      const slot = makeNewSlot(slotId(x, y));
       row.appendChild(slot);
-      const numDisplay = document.createElement("p");
-      slot.appendChild(numDisplay);
       if (y % 2 == 1) {
-        makeEmptySlot(slot);
+        setSlotEmpty(slot);
       } else {
-        makeSlot(slot, 2048);
+        setSlotValue(slot, 2048);
       }
-      
-      slot.id = slotId(x, y);
     }
   }
+}
+
+const makeNewSlot = (id) => {
+  const slot = document.createElement("div");
+  const numDisplay = document.createElement("p");
+  slot.appendChild(numDisplay);
+  slot.id = id;
+
+  const anim_slot = document.createElement("div");
+  const anim_numDisplay = document.createElement("p");
+  anim_slot.appendChild(anim_numDisplay);
+  anim_slot.id = "animation-" + id;
+  setSlotEmpty(anim_slot)
+
+  slot.appendChild(anim_slot)
+  
+  return slot;
 }
 
 const isEmpty = (slot) => {
@@ -167,15 +179,15 @@ const getSlotValue = (slot) => {
 }
 
 const numToSlotClass = (number) => {
-  return "slot slot-" + number  
+  return "slot slot-" + number
 }
 
-const makeEmptySlot = (slot) => {
+const setSlotEmpty = (slot) => {
   slot.className = "slot slot-empty";
   slot.children[0].value = "";
 }
 
-const makeSlot = (slot, value) => {
+const setSlotValue = (slot, value) => {
   slot.className = numToSlotClass(value);
   slot.children[0].value = value;
 }
@@ -185,34 +197,52 @@ const playPopAnimation = (slot) => {
     [
       // keyframes
       { transform: "scale(0)" },
+      { transform: "scale(0)", offset: 0.3 },
       { transform: "scale(1.15)" },
       { transform: "scale(1)" }
     ],
     {
       // timing options
-      duration: 200,
+      duration: 250,
       iterations: 1,
     },
   );
 }
 
-const playMoveAnimation = (slot, delta) => {
-  return;
+const playMoveAnimation = (slot, dir, delta) => {
   slot.animate(
     [
       // keyframes
-      { transform: "scale(1)" }
+      { transform: "translate" + dir + "(" + -(delta * slotSize + delta-1 * marginSize) + "px)" },
+      { transform: "translate" + dir + "(0px)" }
     ],
     {
       // timing options
-      duration: 300,
+      duration: 50 * Math.abs(delta),
       iterations: 1,
+      easing: "ease-in-out"
+    },
+  );
+}
+
+const fakeMergerAnimation = (slot, dir, delta) => {
+  animSlot.animate(
+    [
+      // keyframes
+      { transform: "translate" + dir + "(" + (delta * slotSize) + "px)" },
+      { transform: "translate" + dir + "(0px)" }
+    ],
+    {
+      // timing options
+      duration: 50,
+      iterations: 1,
+      easing: "ease-in-out"
     },
   );
 }
 
 const gameFinished = () => {
-  return hasFreeSpace() || hasMerge();
+  return !(hasFreeSpace() || hasMerge());
 }
 
 const hasFreeSpace = () =>  {
@@ -257,7 +287,6 @@ const incrementScore = (score) => {
 }
 
 const gameOver = () => {
-
 }
 
 addEventListener("keydown", keyPressed);
