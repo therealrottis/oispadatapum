@@ -4,7 +4,7 @@ body {
     margin: auto;
     height: fit-content;
     width: fit-content;
-    padding: px;
+    padding: 5px;
     background-color: blue;
     display: inline-block;
 
@@ -30,6 +30,10 @@ body {
       background-color: gray;
     }
   
+    div.slot-2 {
+      background-image: url("mahanta.png");
+    }
+
     div.slot-2048 {
       background-image: url("radesh.jpg");
     }
