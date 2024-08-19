@@ -1,6 +1,7 @@
 const boardSize = 4;
 const slotSize = 80;
 const marginSize = 10;
+const moveSlotLength = 150;
 
 const keyPressed = (event) => {
   let inputDir;
@@ -55,6 +56,7 @@ const executeAction = (inputDir) => {
     for (let originalX = 0; originalX < boardSize; originalX++) {
       let row = originalX;
       const canMergeWith = [true, true, true, true]
+      let shouldPlayMove = true;
 
       let moveTo = originalX;
       while (row > 0) {
@@ -64,20 +66,38 @@ const executeAction = (inputDir) => {
 
           moveTo = row - 1;
         } else if (getSlotValue(at(row - 1, col)) === getSlotValue(at(row, col)) && canMergeWith[row-1]) {
-          at(row-1, col).className = numToSlotClass(getSlotValue(at(row, col)) * 2);
+          moveTo = row - 1;
+          
+          fakeMergerAnimation(at(row - 1, col), at(row, col), 
+              transpose ? "Y" : "X",
+              flip ? -1 : 1,
+              (originalX - moveTo));
+          fakeMergerAnimation(at(row - 1, col), at(originalX, col), 
+              transpose ? "Y" : "X",
+              (originalX - moveTo) * (flip ? -1 : 1),
+              (originalX - moveTo));
+          const s = document.getElementById("animation-" + at(row -  1, col).id);
+          const value = getSlotValue(at(row, col)) * 2;
+          setTimeout(() => { setSlotValue(s, value); 
+            playMergeAnimation(s); }, moveSlotLength);
+          
+          at(row-1, col).className = numToSlotClass(getSlotValue(at(row, col)) * 2) + " hidden";
+          setSlotEmpty(at(row, col))
+          
           incrementScore(getSlotValue(at(row - 1, col)));
           
-          setSlotEmpty(at(row, col))
           canMergeWith[row] = false;
 
-          moveTo = row - 1;
           row = 0; // stop moving, we merged
+          shouldPlayMove = false;
         } else {
           row = 0; // stop moving, can't move anymore
+
         }
         row--;
       }
-      if (originalX != moveTo) {
+
+      if (shouldPlayMove && originalX != moveTo) {
         playMoveAnimation( at(moveTo, col), transpose ? "Y" : "X", (flip ? -1 : 1) *(originalX - moveTo));
         moved = true;
       }
@@ -135,7 +155,8 @@ const resetBoard = () => {
 const buildBoard = () => {
   let x, y;
   const board = document.getElementById("board");
-
+  const anim_board = document.getElementById("anim-board");
+  
   for (x = 0; x < boardSize; x++) {
     const row = document.createElement("div");
     board.appendChild(row);
@@ -149,6 +170,15 @@ const buildBoard = () => {
         setSlotValue(slot, 2048);
       }
     }
+
+    const anim_row = document.createElement("div");
+    anim_board.appendChild(anim_row);
+    anim_row.className = "board-row"
+    for (y = 0; y < boardSize; y++) {
+      const slot = makeNewSlot("animation-" + slotId(x, y));
+      anim_row.appendChild(slot);
+      setSlotEmpty(slot);
+    }
   }
 }
 
@@ -157,14 +187,6 @@ const makeNewSlot = (id) => {
   const numDisplay = document.createElement("p");
   slot.appendChild(numDisplay);
   slot.id = id;
-
-  const anim_slot = document.createElement("div");
-  const anim_numDisplay = document.createElement("p");
-  anim_slot.appendChild(anim_numDisplay);
-  anim_slot.id = "animation-" + id;
-  setSlotEmpty(anim_slot)
-
-  slot.appendChild(anim_slot)
   
   return slot;
 }
@@ -209,11 +231,28 @@ const playPopAnimation = (slot) => {
   );
 }
 
+const playMergeAnimation = (slot) => {
+  slot.animate(
+    [
+      // keyframes
+      { transform: "scale(1)" },
+      { transform: "scale(1.2)" },
+      { transform: "scale(1)" }
+    ],
+    {
+      // timing options
+      duration: 250,
+      iterations: 1,
+    },
+  );
+  setTimeout(() => { setSlotEmpty(slot); }, 250)
+}
+
 const playMoveAnimation = (slot, dir, delta) => {
   slot.animate(
     [
       // keyframes
-      { transform: "translate" + dir + "(" + -(delta * slotSize + delta-1 * marginSize) + "px)" },
+      { transform: "translate" + dir + "(" + -(delta * slotSize + (delta-1) * marginSize) + "px)" },
       { transform: "translate" + dir + "(0px)" }
     ],
     {
@@ -225,20 +264,25 @@ const playMoveAnimation = (slot, dir, delta) => {
   );
 }
 
-const fakeMergerAnimation = (slot, dir, delta) => {
+const fakeMergerAnimation = (slot, originalSlot, dir, delta, length) => {
+  const animSlot = document.getElementById("animation-" + originalSlot.id);
+  setSlotValue(animSlot, getSlotValue(slot));
+  const animLength = moveSlotLength;
   animSlot.animate(
     [
       // keyframes
-      { transform: "translate" + dir + "(" + (delta * slotSize) + "px)" },
-      { transform: "translate" + dir + "(0px)" }
+      { transform: "translate" + dir + "(0px)" },
+      { transform: "translate" + dir + "(" + (delta * slotSize + (delta-1) * marginSize) + "px)" },
+      { transform: "translate" + dir + "(" + (delta * slotSize + (delta-1) * marginSize) + "px)" }
     ],
     {
       // timing options
-      duration: 50,
+      duration: animLength,
       iterations: 1,
       easing: "ease-in-out"
     },
   );
+  setTimeout(() => {setSlotEmpty(animSlot)}, animLength);
 }
 
 const gameFinished = () => {

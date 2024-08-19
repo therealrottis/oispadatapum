@@ -1,12 +1,18 @@
 
 body {
+  div.boards {
+    position: relative;
+  }
+  
   div.board {
+    position: absolute;
+    left: 0;
+    top: 0;
     margin: auto;
     height: fit-content;
     width: fit-content;
     padding: 5px;
     background-color: blue;
-    display: inline-block;
 
     div.board-row {
       margin: 0px;
@@ -37,5 +43,15 @@ body {
     div.slot-2048 {
       background-image: url("radesh.jpg");
     }
+    
+    div.hidden {
+      display: hidden;
+    }
+  }
+  
+  div.anim-board {
+    left: 0px;
+    top: 0px;
+    background: none;
   }
 }
