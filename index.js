@@ -19,6 +19,7 @@ const keyPressed = (event) => {
     return;
   }
 
+  clearAnimationBoard();
   executeAction(inputDir);
 }
 
@@ -164,10 +165,10 @@ const buildBoard = () => {
     for (y = 0; y < boardSize; y++) {
       const slot = makeNewSlot(slotId(x, y));
       row.appendChild(slot);
-      if (y % 2 == 1) {
+      if (4*x+y == 0) {
         setSlotEmpty(slot);
       } else {
-        setSlotValue(slot, 2048);
+        setSlotValue(slot, 2**(4*x+y));
       }
     }
 
@@ -272,7 +273,6 @@ const fakeMergerAnimation = (slot, originalSlot, dir, delta, length) => {
     [
       // keyframes
       { transform: "translate" + dir + "(0px)" },
-      { transform: "translate" + dir + "(" + (delta * slotSize + (delta-1) * marginSize) + "px)" },
       { transform: "translate" + dir + "(" + (delta * slotSize + (delta-1) * marginSize) + "px)" }
     ],
     {
@@ -324,6 +324,14 @@ const hasMerge = () => {
     }
   }
   return false;
+}
+
+const clearAnimationBoard = () => {
+  for (x = 0; x < boardSize; x++) {
+    for (y = 0; y < boardSize; y++) {
+      setSlotEmpty(document.getElementById("animation-" + slotId(x, y)));
+    }
+  } 
 }
 
 const incrementScore = (score) => {

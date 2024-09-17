@@ -28,7 +28,7 @@ body {
       margin: 5px;
       padding: 0px;
       background-color: white;
-      background-size: contain;
+      background-size: cover;
       display: inline-block;
     }
 
@@ -40,9 +40,50 @@ body {
       background-image: url("mahanta.png");
     }
 
+    div.slot-4 {
+      background-image: url("radesh.png");
+    }
+
+    div.slot-8 {
+      background-image: url("logo_tp.png");
+    }
+
+    div.slot-16 {
+      background-image: url("radeshconstruction.png");
+    }
+
+    div.slot-32 {
+      background-image: url("sayno.gif");
+    }
+
+    div.slot-64 {
+      background-image: url("datamainos2.png");
+    }
+    
+    div.slot-128 {
+      background-image: url("taxi.jpg");
+    }
+
+    div.slot-256 {
+      background-image: url("dataplayer1.png");
+    }
+
+    div.slot-512 {
+      background-image: url("christmas.jpg");
+    }
+  
+    div.slot-1024 {
+      background-image: url("ddf.png");
+    }
+
     div.slot-2048 {
       background-image: url("radesh.jpg");
     }
+    
+    div.slot-4096 {
+      background-image: url("edgeradesh.jpg");
+    }
+
     
     div.hidden {
       display: hidden;
