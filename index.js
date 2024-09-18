@@ -62,7 +62,7 @@ const executeAction = (inputDir) => {
       let moveTo = originalX;
       while (row > 0) {
         if (isEmpty(at(row - 1, col))) {
-          at(row-1, col).className = at(row, col).className;
+          setSlotValue(at(row-1, col), getSlotValue(at(row, col)));
           setSlotEmpty(at(row, col));
 
           moveTo = row - 1;
@@ -82,7 +82,8 @@ const executeAction = (inputDir) => {
           setTimeout(() => { setSlotValue(s, value); 
             playMergeAnimation(s); }, moveSlotLength);
           
-          at(row-1, col).className = numToSlotClass(getSlotValue(at(row, col)) * 2) + " hidden";
+          setSlotValue(at(row-1, col), 2 * getSlotValue(at(row, col)));
+          at(row-1, col).className += " hidden";
           setSlotEmpty(at(row, col))
           
           incrementScore(getSlotValue(at(row - 1, col)));
@@ -99,7 +100,7 @@ const executeAction = (inputDir) => {
       }
 
       if (shouldPlayMove && originalX != moveTo) {
-        playMoveAnimation( at(moveTo, col), transpose ? "Y" : "X", (flip ? -1 : 1) *(originalX - moveTo));
+        playMoveAnimation( at(moveTo, col), transpose ? "Y" : "X", (flip ? -1 : 1) * (originalX - moveTo));
         moved = true;
       }
     }
@@ -165,7 +166,7 @@ const buildBoard = () => {
     for (y = 0; y < boardSize; y++) {
       const slot = makeNewSlot(slotId(x, y));
       row.appendChild(slot);
-      if (4*x+y == 0) {
+      if (x+y-2 <= 0) {
         setSlotEmpty(slot);
       } else {
         setSlotValue(slot, 2**(4*x+y));
@@ -198,7 +199,11 @@ const isEmpty = (slot) => {
 
 const getSlotValue = (slot) => {
   const cName = slot.className;
-  return cName.substring(cName.indexOf("-") + 1).split(" ")[0];
+  const slotValue = cName.substring(cName.indexOf("-") + 1).split(" ")[0];
+  if (slotValue === "empty" || slotValue === "0") {
+    return ""
+  }
+  return slotValue
 }
 
 const numToSlotClass = (number) => {
@@ -300,7 +305,7 @@ const hasFreeSpace = () =>  {
   return false;
 }
 
-// getSlotValue returns "empty" when slot is empty, i think
+// getSlotValue returns "" when slot is empty
 // shouldn't affect hasMerge
 const hasMerge = () => {
   // horizontal
