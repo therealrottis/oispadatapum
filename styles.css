@@ -1,17 +1,22 @@
 
 body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 24px;
+
   div.boards {
     position: relative;
   }
   
   div.board {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 3vh;
     margin: auto;
     height: fit-content;
     width: fit-content;
     padding: 5px;
+    border-radius: 10px;
     background-color: blue;
 
     div.board-row {
@@ -23,10 +28,11 @@ body {
     }
 
     div.slot {
-      height: 80px;
-      width: 80px;
+      height: 120px;
+      width: 120px;
       margin: 5px;
       padding: 0px;
+      border-radius: 5px;
       background-color: white;
       background-size: cover;
       display: inline-block;
@@ -38,50 +44,62 @@ body {
   
     div.slot-2 {
       background-image: url("mahanta.png");
+      background-size: 100% 100%;
     }
 
     div.slot-4 {
       background-image: url("radesh.png");
+      background-size: 100% 100%;
     }
 
     div.slot-8 {
       background-image: url("logo_tp.png");
+      background-size: 100% 100%;
     }
 
     div.slot-16 {
       background-image: url("radeshconstruction.png");
+      background-size: 100% 100%;
     }
 
     div.slot-32 {
       background-image: url("sayno.gif");
+      background-size: 100% 100%;
     }
 
     div.slot-64 {
       background-image: url("datamainos2.png");
+      background-size: 100% 100%;
     }
     
     div.slot-128 {
       background-image: url("taxi.jpg");
+      background-size: 100% 100%;
     }
 
     div.slot-256 {
       background-image: url("dataplayer1.png");
+      background-size: 100% 100%;
     }
 
     div.slot-512 {
       background-image: url("christmas.jpg");
+      background-size: 100% 100%;
     }
   
     div.slot-1024 {
       background-image: url("ddf.png");
+      background-size: 100% 100%;
     }
 
     div.slot-2048 {
-      background-image: url("radesh.jpg");
+      background-image: url("edgeradesh.jpg");
+      background-size: 100% 100%;
     }
     
     div.slot-4096 {
-      background-image: url("edgeradesh.jpg");
+      background-image: url("radesh.jpg");
+      background-size: 100% 100%;
     }
 
     
@@ -100,12 +118,14 @@ body {
 h2 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: black;
+  font-size: 22px;
 }
 
 p {
   position: relative;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  top: 40px;
+  font-size: 18px;
+  top: 76px;
   left: 4px;
   background: local;
   width: fit-content;
