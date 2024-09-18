@@ -207,12 +207,12 @@ const numToSlotClass = (number) => {
 
 const setSlotEmpty = (slot) => {
   slot.className = "slot slot-empty";
-  slot.children[0].value = "";
+  slot.children[0].textContent = "";
 }
 
 const setSlotValue = (slot, value) => {
   slot.className = numToSlotClass(value);
-  slot.children[0].value = value;
+  slot.children[0].textContent = value;
 }
 
 const playPopAnimation = (slot) => {

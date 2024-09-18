@@ -96,3 +96,18 @@ body {
     background: none;
   }
 }
+
+h2 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: black;
+}
+
+p {
+  position: relative;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  top: 40px;
+  left: 4px;
+  background: local;
+  width: fit-content;
+  background-color: orange;
+}
