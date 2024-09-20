@@ -17,7 +17,7 @@ body {
     width: fit-content;
     padding: 5px;
     border-radius: 10px;
-    background-color: blue;
+    background-color: rgb(21, 142, 0);
 
     div.board-row {
       margin: 0px;
@@ -43,62 +43,62 @@ body {
     }
   
     div.slot-2 {
-      background-image: url("mahanta.png");
+      background-image: url("images/mahanta.png");
       background-size: 100% 100%;
     }
 
     div.slot-4 {
-      background-image: url("radesh.png");
+      background-image: url("images/radesh.png");
       background-size: 100% 100%;
     }
 
     div.slot-8 {
-      background-image: url("logo_tp.png");
+      background-image: url("images/logo_tp.png");
       background-size: 100% 100%;
     }
 
     div.slot-16 {
-      background-image: url("radeshconstruction.png");
+      background-image: url("images/radeshconstruction.png");
       background-size: 100% 100%;
     }
 
     div.slot-32 {
-      background-image: url("sayno.gif");
+      background-image: url("images/sayno.gif");
       background-size: 100% 100%;
     }
 
     div.slot-64 {
-      background-image: url("datamainos2.png");
+      background-image: url("images/datamainos2.png");
       background-size: 100% 100%;
     }
     
     div.slot-128 {
-      background-image: url("taxi.jpg");
+      background-image: url("images/taxi.jpg");
       background-size: 100% 100%;
     }
 
     div.slot-256 {
-      background-image: url("dataplayer1.png");
+      background-image: url("images/dataplayer1.png");
       background-size: 100% 100%;
     }
 
     div.slot-512 {
-      background-image: url("christmas.jpg");
+      background-image: url("images/christmas.jpg");
       background-size: 100% 100%;
     }
   
     div.slot-1024 {
-      background-image: url("ddf.png");
+      background-image: url("images/ddf.png");
       background-size: 100% 100%;
     }
 
     div.slot-2048 {
-      background-image: url("edgeradesh.jpg");
+      background-image: url("images/radesh.jpg");
       background-size: 100% 100%;
     }
     
     div.slot-4096 {
-      background-image: url("radesh.jpg");
+      background-image: url("images/edgeradesh.jpg");
       background-size: 100% 100%;
     }
 
@@ -109,8 +109,13 @@ body {
   }
   
   div.anim-board {
-    left: 0px;
-    top: 0px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 3vh;
+    margin: auto;
+    height: fit-content;
+    width: fit-content;
     background: none;
   }
 }
@@ -129,5 +134,5 @@ p {
   left: 4px;
   background: local;
   width: fit-content;
-  background-color: orange;
+  background-color: rgb(255, 153, 0);
 }

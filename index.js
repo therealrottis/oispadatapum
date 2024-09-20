@@ -132,6 +132,7 @@ const placeRandom = () => {
     const slot = document.getElementById(slotId(rand_x, rand_y));
     if (isEmpty(slot)) {
       slot.className = numToSlotClass(rand_value)
+      setSlotValue(slot, rand_value);
       playPopAnimation(slot);
       randPlaced = true;
     }
@@ -165,11 +166,7 @@ const buildBoard = () => {
     for (y = 0; y < boardSize; y++) {
       const slot = makeNewSlot(slotId(x, y));
       row.appendChild(slot);
-      if (4*x+y == 0) {
-        setSlotEmpty(slot);
-      } else {
-        setSlotValue(slot, 2**(4*x+y));
-      }
+      setSlotEmpty(slot);
     }
 
     const anim_row = document.createElement("div");
@@ -180,6 +177,10 @@ const buildBoard = () => {
       anim_row.appendChild(slot);
       setSlotEmpty(slot);
     }
+  }
+
+  for(i = 0; i < 2; i++){
+    placeRandom();
   }
 }
 
