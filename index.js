@@ -1,7 +1,7 @@
 const boardSize = 4;
 const slotSize = 80;
 const marginSize = 10;
-const moveSlotLength = 150;
+const moveSlotLength = 75;
 
 const keyPressed = (event) => {
   let inputDir;
@@ -227,7 +227,7 @@ const playPopAnimation = (slot) => {
     ],
     {
       // timing options
-      duration: 250,
+      duration: 125,
       iterations: 1,
     },
   );
@@ -243,11 +243,11 @@ const playMergeAnimation = (slot) => {
     ],
     {
       // timing options
-      duration: 250,
+      duration: 125,
       iterations: 1,
     },
   );
-  setTimeout(() => { setSlotEmpty(slot); }, 250)
+  setTimeout(() => { setSlotEmpty(slot); }, 125)
 }
 
 const playMoveAnimation = (slot, dir, delta) => {
