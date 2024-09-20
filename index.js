@@ -62,7 +62,7 @@ const executeAction = (inputDir) => {
       let moveTo = originalX;
       while (row > 0) {
         if (isEmpty(at(row - 1, col))) {
-          at(row-1, col).className = at(row, col).className;
+          setSlotValue(at(row-1, col), getSlotValue(at(row, col)));
           setSlotEmpty(at(row, col));
 
           moveTo = row - 1;
@@ -82,7 +82,7 @@ const executeAction = (inputDir) => {
           setTimeout(() => { setSlotValue(s, value); 
             playMergeAnimation(s); }, moveSlotLength);
           
-          at(row-1, col).className = numToSlotClass(getSlotValue(at(row, col)) * 2) + " hidden";
+          setSlotValue(at(row-1, col), getSlotValue(at(row, col)) * 2);
           setSlotEmpty(at(row, col))
           
           incrementScore(getSlotValue(at(row - 1, col)));
@@ -179,7 +179,7 @@ const buildBoard = () => {
     }
   }
 
-  for(i = 0; i < 2; i++){
+  for (i = 0; i < 2; i++) {
     placeRandom();
   }
 }
@@ -187,6 +187,7 @@ const buildBoard = () => {
 const makeNewSlot = (id) => {
   const slot = document.createElement("div");
   const numDisplay = document.createElement("p");
+  numDisplay.class = ""
   slot.appendChild(numDisplay);
   slot.id = id;
   
@@ -206,14 +207,22 @@ const numToSlotClass = (number) => {
   return "slot slot-" + number
 }
 
+const setSlotValueNotEmpty = (slot, value) => {
+  slot.className = numToSlotClass(value);
+  slot.children[0].textContent = "" + value;
+}
+
 const setSlotEmpty = (slot) => {
   slot.className = "slot slot-empty";
   slot.children[0].textContent = "";
 }
 
 const setSlotValue = (slot, value) => {
-  slot.className = numToSlotClass(value);
-  slot.children[0].textContent = value;
+  if (value === "empty") {
+    setSlotEmpty(slot);
+  } else {
+    setSlotValueNotEmpty(slot, value);
+  }
 }
 
 const playPopAnimation = (slot) => {
