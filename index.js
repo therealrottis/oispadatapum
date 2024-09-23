@@ -39,7 +39,7 @@ const executeAction = (inputDir) => {
   }
 
   // fake the board being transformed, by transforming the coordinates
-  const at = (x, y) => {
+  const getTransposedSlotId = (x, y) => {
     if (!flip) {
       x = 3 - x
     }
@@ -48,64 +48,70 @@ const executeAction = (inputDir) => {
       x = y;
       y = tmp;
     }
-    return document.getElementById(slotId(x, y));
+    return slotId(x, y);
+  }
+
+  const at = (x, y) => {
+    return getSlot(getTransposedSlotId(x, y));
+  }
+
+  const atAnim = (x, y) => {
+    return getAnimSlot(getTransposedSlotId(x, y));
   }
   
-  let moved = false;
-  // imagine row is x && col is y
-  for (let col = 0; col < boardSize; col++) {
+  let movedAny = false;
+  for (let y = 0; y < boardSize; y++) {
+    // not already merged?
+    const canMerge = [true, true, true, true];
     for (let originalX = 0; originalX < boardSize; originalX++) {
-      let row = originalX;
-      const canMergeWith = [true, true, true, true]
-      let shouldPlayMove = true;
-
-      let moveTo = originalX;
-      while (row > 0) {
-        if (isEmpty(at(row - 1, col))) {
-          setSlotValue(at(row-1, col), getSlotValue(at(row, col)));
-          setSlotEmpty(at(row, col));
-
-          moveTo = row - 1;
-        } else if (getSlotValue(at(row - 1, col)) === getSlotValue(at(row, col)) && canMergeWith[row-1]) {
-          moveTo = row - 1;
-          
-          fakeMergerAnimation(at(row - 1, col), at(row, col), 
-              transpose ? "Y" : "X",
-              flip ? -1 : 1,
-              (originalX - moveTo));
-          fakeMergerAnimation(at(row - 1, col), at(originalX, col), 
-              transpose ? "Y" : "X",
-              (originalX - moveTo) * (flip ? -1 : 1),
-              (originalX - moveTo));
-          const s = document.getElementById("animation-" + at(row -  1, col).id);
-          const value = getSlotValue(at(row, col)) * 2;
-          setTimeout(() => { setSlotValue(s, value); 
-            playMergeAnimation(s); }, moveSlotLength);
-          
-          setSlotValue(at(row-1, col), getSlotValue(at(row, col)) * 2);
-          setSlotEmpty(at(row, col))
-          
-          incrementScore(getSlotValue(at(row - 1, col)));
-          
-          canMergeWith[row] = false;
-
-          row = 0; // stop moving, we merged
-          shouldPlayMove = false;
-        } else {
-          row = 0; // stop moving, can't move anymore
-
-        }
-        row--;
+      if (isEmpty(at(originalX, y))) {
+        continue;
       }
 
-      if (shouldPlayMove && originalX != moveTo) {
-        playMoveAnimation( at(moveTo, col), transpose ? "Y" : "X", (flip ? -1 : 1) *(originalX - moveTo));
-        moved = true;
+      let x = originalX;
+      let moved = false;
+      let merged = false;
+
+      // move left until we either hit the wall or another thingy we cant merge with
+      // note: after merge the current cell should not be able to merge
+      while (x > 0) {
+        if (isEmpty(at(x-1, y))) {
+          movedAny = true;
+          moved = true;
+          setSlotValue(at(x-1, y), getSlotValue(at(x, y)));
+          setSlotEmpty(at(x, y));
+          // move the canMerge along with the cell
+          canMerge[x-1] = canMerge[x];
+          canMerge[x] = true;
+        } else if (getSlotValue(at(x-1, y)) === getSlotValue(at(x, y))) {
+          movedAny = true;
+          moved = true;
+          merged = true;
+
+          setSlotValue(at(x-1, y), getSlotValue(at(x-1, y)) * 2 );
+          setSlotEmpty(at(x, y));
+
+          incrementScore(getSlotValue(at(x-1, y)));
+          canMerge[x-1] = false;
+
+        }
+        x -= 1;
+      }
+      if (merged) {
+        const val = getSlotValue(at(x, y));
+
+        setTimeout(() => {
+          setSlotValue(atAnim(x, y), val); 
+          playMergeAnimation(s);
+        }, moveSlotLength);
+      }
+      if (moved) {
+        playMoveAnimation(at(x, y), transpose ? "Y" : "X", (flip ? -1 : 1) * (originalX - x));
       }
     }
   }
 
-  if (!moved) {
+  if (!movedAny) {
     return; // move that does nothing? just return
   }
   
@@ -143,11 +149,19 @@ const slotId = (x, y) => {
   return "" + (x) + ";" + (y);
 }
 
+const getSlot = (id) => {
+  return document.getElementById(id);
+}
+
+const getAnimSlot = (id) => {
+  return document.getElementById("animation-" + id);
+}
+
 const resetBoard = () => {
   let x, y;
   for (x = 0; x < boardSize; x++) {
     for (y = 0; y < boardSize; y++) {
-      const curSlot = document.getElementById(slotId(x, y));
+      const curSlot = getSlot(slotId(x, y));
       setSlotEmpty(curSlot);
     }
   }
