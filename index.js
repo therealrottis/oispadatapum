@@ -365,8 +365,8 @@ function setCookie(name, value, days) {
 
 async function setEncryptedCookie(score) {
   const hash = await sha256(score + key);
-  setCookie("highscore", score, 365);
-  setCookie("hscore", hash, 365);
+  setCookie("highscore", score, 365, "/oispadatapum");
+  setCookie("hscore", hash, 365, "/oispadatapum");
 }
 
 function getCookie(name) {
