@@ -3,6 +3,7 @@ const slotSize = 80;
 const marginSize = 10;
 const moveSlotLength = 75;
 
+
 const keyPressed = (event) => {
   let inputDir;
 
@@ -110,7 +111,7 @@ const executeAction = (inputDir) => {
   }
   
   if (gameFinished()) {
-    return gameOver();
+    gameOver();
   }
 
   placeRandom()
@@ -152,6 +153,8 @@ const resetBoard = () => {
     }
   }
 }
+
+const key = "जय दातापुम!"
 
 // execute once!
 const buildBoard = () => {
@@ -346,10 +349,82 @@ const clearAnimationBoard = () => {
 
 const incrementScore = (score) => {
   document.getElementById("score").textContent = (parseInt(score) + parseInt(document.getElementById("score").textContent));
+  updateHighScore();
 }
 
-const gameOver = () => {
+function gameOver(){
+  console.log("jai");
 }
+
+function setCookie(name, value, days) {
+  const d = new Date();
+  d.setTime(d.getTime() + (days*24*60*60*1000));
+  const expires = "expires=" + d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+async function setEncryptedCookie(score) {
+  const hash = await sha256(score + key);
+  setCookie("highscore", score, 365);
+  setCookie("hscore", hash, 365);
+}
+
+function getCookie(name) {
+  const cname = name + "=";
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookies = decodedCookie.split(';');
+  for(let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i];
+      while (cookie.charAt(0) === ' ') {
+          cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(cname) === 0) {
+          return cookie.substring(cname.length, cookie.length);
+      }
+  }
+  return "";
+}
+
+async function getVerifiedScore() {
+  const score = getCookie("highscore");
+  const storedHash = getCookie("hscore");
+
+  if (score !== "" && storedHash !== "") {
+      const computedHash = await sha256(score + key);
+      if (computedHash === storedHash) {
+          return parseInt(score);
+      }
+  }
+  return 0;
+}
+
+
+async function updateHighScore() {
+  const currentScore = parseInt(document.getElementById("score").textContent);
+  let highscore = await getVerifiedScore();
+
+  if (currentScore > highscore) {
+      await setEncryptedCookie(currentScore);
+      highscore = currentScore;
+  }
+
+  document.getElementById("highscore").textContent = highscore;
+}
+
+async function loadHighScore() {
+  const highscore = await getVerifiedScore();
+  document.getElementById("highscore").textContent = highscore;
+}
+
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 
 addEventListener("keydown", keyPressed);
 buildBoard();
+loadHighScore();

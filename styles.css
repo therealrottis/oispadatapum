@@ -2,16 +2,12 @@
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 24px;
-
-  div.boards {
-    position: relative;
-  }
   
   div.board {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 3vh;
+    top: 17.5%;
     margin: auto;
     height: fit-content;
     width: fit-content;
@@ -107,7 +103,7 @@ body {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 3vh;
+    top: 17.5;
     margin: auto;
     height: fit-content;
     width: fit-content;
