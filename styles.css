@@ -51,51 +51,51 @@ body {
     }
   
     div.slot-2 {
-      background-image: url("images/mahanta.png");
+      background-image: url("images/mahanta.webp");
     }
 
     div.slot-4 {
-      background-image: url("images/radesh.png");
+      background-image: url("images/radeshframe.webp");
     }
 
     div.slot-8 {
-      background-image: url("images/logo_tp.png");
+      background-image: url("images/logo_tp.webp");
     }
 
     div.slot-16 {
-      background-image: url("images/radeshconstruction.png");
+      background-image: url("images/radeshconstruction.webp");
     }
 
     div.slot-32 {
-      background-image: url("images/sayno.gif");
+      background-image: url("images/sayno.webp");
     }
 
     div.slot-64 {
-      background-image: url("images/datamainos2.png");
+      background-image: url("images/datamainos2.webp");
     }
     
     div.slot-128 {
-      background-image: url("images/taxi.jpg");
+      background-image: url("images/taxi.webp");
     }
 
     div.slot-256 {
-      background-image: url("images/dataplayer1.png");
+      background-image: url("images/dataplayer1.webp");
     }
 
     div.slot-512 {
-      background-image: url("images/christmas.jpg");
+      background-image: url("images/christmas.webp");
     }
   
     div.slot-1024 {
-      background-image: url("images/ddf.png");
+      background-image: url("images/ddf.webp");
     }
 
     div.slot-2048 {
-      background-image: url("images/radesh.jpg");
+      background-image: url("images/radesh.webp");
     }
     
     div.slot-4096 {
-      background-image: url("images/edgeradesh.jpg");
+      background-image: url("images/edgeradesh.webp");
     }
   }
   
